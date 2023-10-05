@@ -49,6 +49,10 @@ struct max_spi_init_param max14906_spi_extra = {
 	.vssel = MXC_GPIO_VSSEL_VDDIOH,
 };
 
+struct max_gpio_init_param gpio_extra_ip = {
+	.vssel = MXC_GPIO_VSSEL_VDDIO
+};
+
 static const char *climit_name[] = {
 	"600mA", "130mA", "300mA", "1.2A",
 };
@@ -71,6 +75,17 @@ struct no_os_spi_init_param max14906_spi_ip = {
 	.platform_ops = SPI_OPS,
 	.chip_select = SPI_CS,
 };
+
+void gpio_callback_fn(void *ctx)
+{
+	struct max149x6_desc *desc = ctx;
+	int ret;
+	uint32_t val;
+
+	ret = max149x6_reg_read(desc, MAX14906_INT_REG, &val);
+	if (val)
+		pr_info("Fault detected!\n");
+}
 
 int main(void)
 {
@@ -99,6 +114,25 @@ int main(void)
 
 	no_os_uart_stdio(uart_desc);
 
+	/** Confiuring pin 5 of port 0 as a input GPIO. */
+	struct no_os_gpio_desc *gpio_desc;
+	struct no_os_gpio_init_param gpio_param = {
+		.port = 0,
+		.pull = NO_OS_PULL_NONE,
+		.number = 5,
+		.platform_ops = &max_gpio_ops,
+		.extra = &gpio_extra_ip,
+	};
+
+
+	ret = no_os_gpio_get(&gpio_desc, &gpio_param);
+	if (ret)
+		return ret;
+
+	ret = no_os_gpio_direction_input(gpio_desc);
+	if (ret)
+		return ret;
+
 	/** MAX14906 Initialization */
 	ret = max14906_init(&max14906_desc, &max14906_ip);
 	if (ret)
@@ -106,6 +140,71 @@ int main(void)
 
 	/** Testing the UART. */
 	pr_info("Hello World!\n");
+
+	struct no_os_irq_ctrl_desc *global_desc;
+	struct no_os_irq_init_param global_desc_param = {
+		.irq_ctrl_id = GPIO_IRQ_ID,
+		.platform_ops = &max_irq_ops,
+		.extra = NULL
+	};
+
+	ret = no_os_irq_ctrl_init(&global_desc, &global_desc_param);
+	if (ret)
+		return ret;
+
+	/** GPIO Interrupt Controller */
+	struct no_os_irq_ctrl_desc *gpio_irq_desc;
+	struct no_os_irq_init_param gpio_irq_desc_param = {
+		.irq_ctrl_id = GPIO_IRQ_ID,
+		.platform_ops = GPIO_IRQ_OPS,
+		.extra = NULL
+	};
+
+	ret = no_os_irq_ctrl_init(&gpio_irq_desc, &gpio_irq_desc_param);
+	if (ret)
+		return ret;
+
+	struct no_os_callback_desc gpio_cb = {
+		.callback = gpio_callback_fn,
+		/** Parameter to be passed when the callback is called. */
+		.ctx = max14906_desc,
+		.event = NO_OS_EVT_GPIO,
+		.peripheral = NO_OS_GPIO_IRQ,
+		.handle = NULL
+	};
+
+	/**
+	 * The callback will be registered on pin 21 of the GPIO port 2 in this case
+	 * (the port is specified by the id field of the gpio_irq_desc).
+	*/
+	ret = no_os_irq_register_callback(gpio_irq_desc, 5, &gpio_cb);
+	if (ret)
+		return ret;
+
+	/**
+	 * Set the trigger condition of the interrupt on pin 21 to rising edge.
+	*/
+	ret = no_os_irq_trigger_level_set(gpio_irq_desc, 5, NO_OS_IRQ_EDGE_BOTH);
+	if (ret)
+		return ret;
+
+	/**
+	 * This calls the interrupt priority set function of the parent controller.
+	*/
+	ret = no_os_irq_set_priority(gpio_irq_desc, 5, 1);
+	if (ret)
+		return ret;
+
+	/**
+	 * Enbale interrupts on pin 21
+	*/
+	ret = no_os_irq_enable(gpio_irq_desc, 5);
+	if (ret)
+		return ret;
+
+	ret = no_os_irq_enable(global_desc, GPIO0_IRQn);
+	if (ret)
+		return ret;
 
 	/** Setting SLED set bit 1 in the config register. */
 	ret = max149x6_reg_update(max14906_desc, MAX14906_CONFIG1_REG,
