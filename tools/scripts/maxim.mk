@@ -54,6 +54,7 @@ LDFLAGS = -mcpu=cortex-m4 	\
 	-Wl,--gc-sections 	\
 	--specs=nosys.specs	\
 	-mfloat-abi=hard 	\
+	-Xlinker -Map=foo.map	\
 	-mfpu=fpv4-sp-d16 	\
 	--entry=Reset_Handler		
 	
