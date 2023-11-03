@@ -4,6 +4,9 @@ TARGET=max32690
 LIBRARIES += maxq1065_lib
 LIBRARIES += lwip
 
+HEAP_SIZE = 0x80000
+STACK_SIZE = 0xFFFF
+
 include ../../tools/scripts/generic_variables.mk
 
 CFLAGS += -DMXQ_ON_NO_OS
