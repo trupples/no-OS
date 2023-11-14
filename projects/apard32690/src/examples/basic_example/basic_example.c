@@ -266,7 +266,7 @@ int basic_example_main()
 
 	uint32_t i = 0;
 	struct tcp_socket_desc *tcp_socket;
-	struct connection *client_socket;
+	struct connection *client_socket = NULL;
 	bool connected = false;
 	struct tcp_socket_init_param tcp_ip = {
 		.net = &lwip_desc->no_os_net,
