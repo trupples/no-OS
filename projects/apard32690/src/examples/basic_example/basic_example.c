@@ -257,53 +257,53 @@ int basic_example_main()
 	else
 		printf("FAILED \n");
 
-	memcpy(adin1110_ip.mac_address, adin1110_mac_address, NETIF_MAX_HWADDR_LEN);
-	memcpy(lwip_ip.hwaddr, adin1110_mac_address, NETIF_MAX_HWADDR_LEN);
+	// memcpy(adin1110_ip.mac_address, adin1110_mac_address, NETIF_MAX_HWADDR_LEN);
+	// memcpy(lwip_ip.hwaddr, adin1110_mac_address, NETIF_MAX_HWADDR_LEN);
 
-	ret = no_os_lwip_init(&lwip_desc, &lwip_ip);
-	if (ret)
-		return ret;
+	// ret = no_os_lwip_init(&lwip_desc, &lwip_ip);
+	// if (ret)
+	// 	return ret;
 
-	uint32_t i = 0;
-	struct tcp_socket_desc *tcp_socket;
-	struct connection *client_socket = NULL;
-	bool connected = false;
-	struct tcp_socket_init_param tcp_ip = {
-		.net = &lwip_desc->no_os_net,
-		.max_buff_size = 0
-	};
+	// uint32_t i = 0;
+	// struct tcp_socket_desc *tcp_socket;
+	// struct connection *client_socket = NULL;
+	// bool connected = false;
+	// struct tcp_socket_init_param tcp_ip = {
+	// 	.net = &lwip_desc->no_os_net,
+	// 	.max_buff_size = 0
+	// };
 
-	ret = socket_init(&tcp_socket, &tcp_ip);
-	if (ret)
-		return ret;
+	// ret = socket_init(&tcp_socket, &tcp_ip);
+	// if (ret)
+	// 	return ret;
 
-	ret = socket_bind(tcp_socket, 10000);
-	if (ret)
-		return ret;
+	// ret = socket_bind(tcp_socket, 10000);
+	// if (ret)
+	// 	return ret;
 
-	ret = socket_listen(tcp_socket, MAX_BACKLOG);
-	if (ret)
-		return ret;
+	// ret = socket_listen(tcp_socket, MAX_BACKLOG);
+	// if (ret)
+	// 	return ret;
 
-	uint8_t read_buff[100] = {0};
+	// uint8_t read_buff[100] = {0};
 
-	while(1) {
-		ret = socket_accept(tcp_socket, &client_socket);
-		if (ret && ret != -EAGAIN)
-			return ret;
+	// while(1) {
+	// 	ret = socket_accept(tcp_socket, &client_socket);
+	// 	if (ret && ret != -EAGAIN)
+	// 		return ret;
 
-		if (client_socket) {
-			connected = true;
-		}
+	// 	if (client_socket) {
+	// 		connected = true;
+	// 	}
 
-		no_os_lwip_step(tcp_socket->net->net, NULL);
+	// 	no_os_lwip_step(tcp_socket->net->net, NULL);
 
-		if (connected) {
-			ret = socket_recv(client_socket, read_buff, 1);
-			if (ret > 0)
-				socket_send(client_socket, read_buff, ret);
-		}
-	}
+	// 	if (connected) {
+	// 		ret = socket_recv(client_socket, read_buff, 1);
+	// 		if (ret > 0)
+	// 			socket_send(client_socket, read_buff, ret);
+	// 	}
+	// }
 
 	return 0;
 }
