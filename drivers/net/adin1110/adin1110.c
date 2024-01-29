@@ -856,6 +856,7 @@ int adin1110_init(struct adin1110_desc **desc,
 		  struct adin1110_init_param *param)
 {
 	struct adin1110_desc *descriptor;
+	uint32_t reg_val;
 	int ret;
 
 	if (!param->mac_address)
@@ -908,6 +909,9 @@ int adin1110_init(struct adin1110_desc **desc,
 		/* Wait for the MAC and PHY digital interface to intialize */
 		no_os_mdelay(90);
 	}
+
+	ret = adin1110_reg_read(descriptor, 0x1, &reg_val);
+	ret = adin1110_reg_read(descriptor, 0x9, &reg_val);
 
 	ret = adin1110_setup_mac(descriptor);
 	if (ret)
