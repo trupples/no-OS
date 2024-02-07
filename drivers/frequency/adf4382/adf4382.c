@@ -221,11 +221,11 @@ int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val)
 {
 	dev->ref_freq_hz = (uint64_t)val;
 
-	if(val > ADF4382_MAX_REF_CLK)
-		dev->ref_freq_hz = ADF4382_MAX_REF_CLK;
+	if(val > ADF4382_REF_CLK_MAX)
+		dev->ref_freq_hz = ADF4382_REF_CLK_MAX;
 
-	if(val < ADF4382_MIN_REF_CLK)
-		dev->ref_freq_hz = ADF4382_MIN_REF_CLK;
+	if(val < ADF4382_REF_CLK_MIN)
+		dev->ref_freq_hz = ADF4382_REF_CLK_MIN;
 
 	return adf4382_set_freq(dev);
 }
@@ -288,8 +288,8 @@ int adf4382_set_ref_div(struct adf4382_dev *dev, int32_t div)
 {
 	dev->ref_div = div;
 
-	if(div > ADF4382_MAX_REF_DIV)
-		dev->ref_div = ADF4382_MAX_REF_DIV;
+	if(div > ADF4382_REF_DIV_MAX)
+		dev->ref_div = ADF4382_REF_DIV_MAX;
 
 	return adf4382_set_freq(dev);
 }
@@ -327,8 +327,8 @@ int adf4382_set_cp_i(struct adf4382_dev *dev, int32_t reg_val)
 {
 	dev->cp_i = (uint8_t)reg_val;
 
-	if(reg_val > ADF4382_MAX_CPI_VAL)
-		dev->cp_i = ADF4382_MAX_CPI_VAL;
+	if(reg_val > ADF4382_CPI_VAL_MAX)
+		dev->cp_i = ADF4382_CPI_VAL_MAX;
 
 	return adf4382_set_freq(dev);
 }
@@ -368,8 +368,8 @@ int adf4382_set_bleed_word(struct adf4382_dev *dev, int32_t word)
 
 	dev->bleed_word = (uint16_t)word;
 
-	if(word > ADF4382_MAX_BLEED_WORD)
-		dev->bleed_word = ADF4382_MAX_BLEED_WORD;
+	if(word > ADF4382_BLEED_WORD_MAX)
+		dev->bleed_word = ADF4382_BLEED_WORD_MAX;
 
 	return adf4382_set_freq(dev);
 }
@@ -404,8 +404,9 @@ int adf4382_get_bleed_word(struct adf4382_dev *dev, int32_t *word)
 
 /**
  * @brief Set the desired output frequency and reset everything over to maximum
- * supported value of 22GHz to the max. value and everything under the minimum
- * supported value of 687.5MHz to the min. value.
+ * supported value of 22GHz (21GHz for ADF4382A) to the max. value and
+ * everything under the minimum supported value of 687.5MHz (2.875GHz for
+ * ADF4382A) to the min. value.
  * @param dev 		- The device structure.
  * @param val	 	- The desired output frequency in Hz.
  * @return    		- 0 in case of success or negative error code.
@@ -414,11 +415,11 @@ int adf4382_set_rfout(struct adf4382_dev *dev, uint64_t val)
 {
 	dev->freq= val;
 
-	if(val > ADF4382_MAX_RFOUT)
-		dev->freq = ADF4382_MAX_RFOUT;
+	if(val > dev->freq_max)
+		dev->freq = dev->freq_max;
 
-	if(val < ADF4382_MIN_RFOUT)
-		dev->freq = ADF4382_MIN_RFOUT;
+	if(val < dev->freq_min)
+		dev->freq = dev->freq_min;
 
 	return adf4382_set_freq(dev);
 }
@@ -445,8 +446,8 @@ int adf4382_set_out_power(struct adf4382_dev *dev, uint8_t ch, int32_t pwr)
 {
 	uint8_t tmp;
 
-	if(pwr > ADF4382_MAX_OUT_PWR)
-		pwr = ADF4382_MAX_OUT_PWR;
+	if(pwr > ADF4382_OUT_PWR_MAX)
+		pwr = ADF4382_OUT_PWR_MAX;
 
 	if(!ch) {
 		tmp = no_os_field_prep(ADF4382_CLK1_OPWR_MSK, pwr);
@@ -1115,11 +1116,14 @@ int adf4382_init(struct adf4382_dev **dev,
 	device->ld_count = init_param->ld_count;
 	device->phase_adj = 0;
 
-
+	device->freq_max = ADF4382_RFOUT_MAX;
+	device->freq_min = ADF4382_RFOUT_MIN;
 	device->vco_max = ADF4382_VCO_FREQ_MAX;
 	device->vco_min = ADF4382_VCO_FREQ_MIN;
 	device->clkout_div_reg_val_max = ADF4382_CLKOUT_DIV_REG_VAL_MAX;
 	if (init_param->adf4382a) {
+		device->freq_max = ADF4382A_RFOUT_MAX;
+		device->freq_min = ADF4382A_RFOUT_MIN;
 		device->vco_max = ADF4382A_VCO_FREQ_MAX;
 		device->vco_min = ADF4382A_VCO_FREQ_MIN;
 		device->clkout_div_reg_val_max = ADF4382A_CLKOUT_DIV_REG_VAL_MAX;
