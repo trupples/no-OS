@@ -233,6 +233,7 @@ int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val)
 /**
  * @brief Gets the user proposed reference frequency
  * @param dev 		- The device structure.
+ * @param val		- The set value of the reference frequency in Hz.
  * @return    		- Reference frequency in KHz.
  */
 void adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val)
@@ -427,6 +428,7 @@ int adf4382_set_rfout(struct adf4382_dev *dev, uint64_t val)
 /**
  * @brief Gets the user proposed output frequency
  * @param dev 		- The device structure.
+ * @param val		- The set value of the output frequency in Hz.
  * @return    		- Nothing
  */
 void adf4382_get_rfout(struct adf4382_dev *dev, uint64_t *val)
@@ -726,7 +728,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 	uint16_t n_int;
 	uint8_t div1;
 	uint64_t tmp;
-	uint64_t vco;
+	uint64_t vco = 0;
 	uint8_t val;
 	int ret;
 
