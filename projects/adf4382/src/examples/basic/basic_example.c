@@ -63,7 +63,7 @@ int basic_example_main()
 	if (ret)
 		goto error;
 
-	ret = adf4382_set_phase_adjust(dev, 10);
+	ret = adf4382_set_phase_adjust(dev, 1);
 	if (ret)
 		goto error;
 
