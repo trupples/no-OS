@@ -1,5 +1,4 @@
 # Uncomment to use the desired platform
-# PLATFORM = xilinx
 # PLATFORM = stm32
 PLATFORM = mbed
 
