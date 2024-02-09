@@ -35,6 +35,13 @@ DIGITAL INPUT/OUTPUT
    drivers/max22196
    drivers/max22200
 
+FREQUENCY GENERATORS
+====================
+.. toctree::
+   :maxdepth: 1
+
+   drivers/adf4382
+
 INERTIAL MEASUREMENT UNITS
 ==========================
 .. toctree::
