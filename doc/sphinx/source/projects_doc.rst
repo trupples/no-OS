@@ -4,6 +4,13 @@ no-OS projects list
 
 The following sections contain code documentation for ADI no-OS projects.
 
+FREQUENCY GENERATORS
+====================
+.. toctree::
+   :maxdepth: 1
+
+   projects/adf4382
+
 INERTIAL MEASUREMENT UNITS
 ==========================
 .. toctree::
