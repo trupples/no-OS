@@ -14,3 +14,4 @@ SRCS += $(PLATFORM_DRIVERS)/stm32_delay.c     \
 	$(PLATFORM_DRIVERS)/stm32_gpio_irq.c  \
 	$(PLATFORM_DRIVERS)/stm32_uart.c      \
 	$(PLATFORM_DRIVERS)/stm32_uart_stdio.c
+	

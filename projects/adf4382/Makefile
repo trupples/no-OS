@@ -6,7 +6,6 @@ PLATFORM = mbed
 BASIC_EXAMPLE = n
 IIO_EXAMPLE = y
 
-
 include ../../tools/scripts/generic_variables.mk
 
 include src.mk

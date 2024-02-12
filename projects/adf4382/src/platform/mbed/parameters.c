@@ -50,5 +50,3 @@ extern struct mbed_spi_init_param adf4382_spi_extra = {
 	.spi_clk_pin = SDP_SPI_SCK,
 	.use_sw_csb = false
 };
-
-
