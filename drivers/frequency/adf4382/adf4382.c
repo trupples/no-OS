@@ -739,7 +739,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 	if (ret)
 		return ret;
 
-	for (clkout_div = 0; clkout_div <  dev->clkout_div_reg_val_max; clkout_div++) {
+	for (clkout_div = 0; clkout_div <= dev->clkout_div_reg_val_max; clkout_div++) {
 		tmp = (1 << clkout_div) * dev->freq;
 		if (tmp < dev->vco_min || tmp > dev->vco_max )
 			continue;
