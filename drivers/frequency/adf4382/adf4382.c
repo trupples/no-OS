@@ -697,11 +697,6 @@ static int adf4382_pll_fract_n_compute(struct adf4382_dev *dev, uint64_t freq,
 	*frac2_word = 0;
 	*mod2_word = 0;
 
-	if (pfd_freq > ADF4382_PFD_FREQ_FRAC_MAX) {
-		pr_warning("PFD frequency exceeds 250MHz.\n");
-		pr_warning("Only integer mode available.\n");
-	}
-
 	if(rem > 0)
 		return adf4382_frac2_compute(dev, rem, pfd_freq, frac2_word,
 					     mod2_word);
