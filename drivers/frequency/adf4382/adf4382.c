@@ -1135,7 +1135,7 @@ int adf4382_init(struct adf4382_dev **dev,
 	if (ret)
 		goto error_spi;
 
-	no_os_udelay(500000);
+	no_os_udelay(ADF4382_POR_DELAY_US);
 
 	if (device->spi_3wire_en)
 		en = false;

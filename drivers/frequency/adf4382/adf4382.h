@@ -470,6 +470,7 @@
 #define ADF4382_VCO_CAL_CNT			202
 #define ADF4382_VCO_CAL_VTUNE			124
 #define ADF4382_VCO_CAL_ALC			250
+#define ADF4382_POR_DELAY_US			200
 
 #define KHZ					1000
 #define MHZ					KHZ * KHZ
