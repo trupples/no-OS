@@ -3,7 +3,7 @@
  *   @brief  Implementation of adf4382 Driver.
  *   @author Ciprian Hegbeli (ciprian.hegbeli@analog.com)
 ********************************************************************************
- * Copyright 2023(c) Analog Devices, Inc.
+ * Copyright 2024(c) Analog Devices, Inc.
  *
  * All rights reserved.
  *

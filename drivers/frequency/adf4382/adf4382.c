@@ -3,7 +3,7 @@
  *   @brief  Implementation of adf4382 Driver.
  *   @author Ciprian Hegbeli (ciprian.hegbeli@analog.com)
 ********************************************************************************
- * Copyright 2023(c) Analog Devices, Inc.
+ * Copyright 2024(c) Analog Devices, Inc.
  *
  * All rights reserved.
  *
@@ -43,7 +43,7 @@
 #include "no_os_print_log.h"
 #include "no_os_delay.h"
 
-//Charge pump current values expressed in uA
+/* Charge pump current values expressed in uA */
 static const int adf4382_ci_ua[] = {
 	700,
 	900,
@@ -116,12 +116,12 @@ int adf4382_spi_read(struct adf4382_dev *dev, uint16_t reg_addr, uint8_t *data)
 
 	ret = no_os_spi_write_and_read(dev->spi_desc, buff,
 				       ADF4382_BUFF_SIZE_BYTES);
-	if(ret < 0)
+	if(ret)
 		return ret;
 
 	*data = buff[2];
 
-	return ret;
+	return 0;
 }
 
 /**
@@ -219,7 +219,7 @@ int adf4382_reg_dump(struct adf4382_dev *dev)
  */
 int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val)
 {
-	dev->ref_freq_hz = (uint64_t)val;
+	dev->ref_freq_hz = val;
 
 	if(val > ADF4382_REF_CLK_MAX)
 		dev->ref_freq_hz = ADF4382_REF_CLK_MAX;
@@ -743,7 +743,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 		break;
 	}
 
-	if (vco == 0) {
+	if (!vco) {
 		pr_err("VCO is 0\n");
 		return -EINVAL;
 	}
@@ -961,7 +961,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
  */
 int adf4382_set_phase_adjust(struct adf4382_dev *dev, uint32_t phase_ps)
 {
-	uint8_t phase_reg_value;
+	uint64_t phase_reg_value;
 	uint32_t rfout_deg_ns;
 	uint32_t phase_deg_ns;
 	uint64_t rfout_deg_s;
@@ -970,7 +970,6 @@ int adf4382_set_phase_adjust(struct adf4382_dev *dev, uint32_t phase_ps)
 	uint64_t phase_ci;
 	uint64_t pfd_freq;
 	int ret;
-
 
 	ret = adf4382_spi_update_bits(dev, 0x1E, ADF4382_EN_PHASE_RESYNC_MSK, 0xff);
 	if(ret)
@@ -1046,7 +1045,7 @@ int adf4382_set_phase_pol(struct adf4382_dev *dev, bool polarity)
  */
 int adf4382_get_phase_pol(struct adf4382_dev *dev, bool *polarity)
 {
-	uint8_t pol;
+	int pol;
 
 	pol = adf4382_spi_test_bits(dev, 0x32, ADF4382_PHASE_ADJ_POL_MSK);
 	if (pol < 0)
