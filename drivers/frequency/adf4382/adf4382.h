@@ -640,10 +640,6 @@ int adf4382_spi_read(struct adf4382_dev *dev, uint16_t reg_addr, uint8_t *data);
 int adf4382_spi_update_bits(struct adf4382_dev *dev, uint16_t reg_addr,
 			    uint8_t mask, uint8_t data);
 
-/** ADF4382 SPI Test if bit is set */
-int adf4382_spi_test_bits(struct adf4382_dev *dev, uint16_t reg_addr,
-			  uint8_t bits);
-
 /** ADF4382 Register dump */
 int adf4382_reg_dump(struct adf4382_dev *dev);
 

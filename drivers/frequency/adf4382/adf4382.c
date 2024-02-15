@@ -152,26 +152,6 @@ int adf4382_spi_update_bits(struct adf4382_dev *dev, uint16_t reg_addr,
 }
 
 /**
- * @brief Tests if bits are set in the ADF4382 register.
- * @param dev 	   - The device structure.
- * @param reg_addr - The register address.
- * @param bits 	   - Bits to be tested.
- * @return	   - 0 in case bits are not set, positive value if they are set
- * 		     or negative error code otherwise.
- */
-int adf4382_spi_test_bits(struct adf4382_dev *dev, uint16_t reg_addr,
-			  uint8_t bits)
-{
-	uint8_t val, ret;
-
-	ret = adf4382_spi_read(dev, reg_addr, &val);
-	if (ret)
-		return ret;
-
-	return (val & bits) == bits;
-}
-
-/**
  * @brief Will output on the terminal the values of all the ADF4382 registers.
  * @param dev 	- The device structure.
  * @return 	- 0 in case of success or negative error code.
@@ -265,14 +245,14 @@ int adf4382_set_en_ref_doubler(struct adf4382_dev *dev, bool en)
  */
 int adf4382_get_en_ref_doubler(struct adf4382_dev *dev, bool *en)
 {
-	int tmp;
+	uint8_t tmp;
+	int ret;
+	
+	ret = adf4382_spi_read(dev, 0x20, &tmp);
+	if (ret)
+		return ret;
 
-	tmp = adf4382_spi_test_bits(dev, 0x20, ADF4382_EN_RDBLR_MSK);
-	if (tmp < 0) {
-		dev->ref_doubler_en = 0;
-		return tmp;
-	}
-	dev->ref_doubler_en = tmp;
+	dev->ref_doubler_en = no_os_field_get(tmp, ADF4382_EN_RDBLR_MSK);
 	*en = dev->ref_doubler_en;
 
 	return 0;
@@ -520,16 +500,18 @@ int adf4382_set_en_chan(struct adf4382_dev *dev, uint8_t ch, bool en)
  */
 int adf4382_get_en_chan(struct adf4382_dev *dev, uint8_t ch, bool *en)
 {
-	int enable;
+	uint8_t tmp;
+	bool enable;
+	int ret;
+	
+	ret = adf4382_spi_read(dev, 0x2B, &tmp);
+	if (ret)
+		return ret;
 
 	if(!ch)
-		enable = adf4382_spi_test_bits(dev, 0x2B,
-					       ADF4382_PD_CLKOUT1_MSK);
+		enable = no_os_field_get(tmp, ADF4382_PD_CLKOUT1_MSK);
 	else
-		enable = adf4382_spi_test_bits(dev, 0x2B,
-					       ADF4382_PD_CLKOUT2_MSK);
-	if (enable < 0)
-		return enable;
+		enable = no_os_field_get(tmp, ADF4382_PD_CLKOUT2_MSK);
 
 	*en = !enable;
 
@@ -559,13 +541,14 @@ int adf4382_set_en_sync(struct adf4382_dev *dev, bool en)
  */
 int adf4382_get_en_sync(struct adf4382_dev *dev, bool *en)
 {
-	int enable;
+	uint8_t tmp;
+	int ret;
 
-	enable = adf4382_spi_test_bits(dev, 0x2A, ADF4382_PD_SYNC_MSK);
-	if (enable < 0)
-		return enable;
+	ret = adf4382_spi_read(dev, 0x2A, &tmp);
+	if (ret)
+		return ret;
 
-	*en = enable;
+	*en = no_os_field_get(tmp, ADF4382_PD_SYNC_MSK);
 	return 0;
 
 }
@@ -621,20 +604,23 @@ static int adf4382_frac2_compute(struct adf4382_dev *dev, uint64_t res,
 				 uint32_t *mod2_word)
 {
 	uint32_t channel_spacing;
-	int en_phase_resync;
+	uint8_t en_phase_resync;
 	uint32_t chsp_freq;
 	uint32_t mod2_tmp;
 	uint32_t mod2_max;
 	uint32_t mod2_wd;
 	uint32_t gcd;
+	uint8_t tmp;
+	int ret;
 
 	channel_spacing = 1;
 	mod2_wd = 1;
 
-	en_phase_resync = adf4382_spi_test_bits(dev, 0x1E,
-						ADF4382_EN_PHASE_RESYNC_MSK);
-	if (en_phase_resync < 0)
-		return en_phase_resync;
+	ret = adf4382_spi_read(dev, 0x1E, &tmp);
+	if (ret)
+		return ret;
+
+	en_phase_resync = no_os_field_get(tmp, ADF4382_EN_PHASE_RESYNC_MSK);;
 
 	if (en_phase_resync)
 		mod2_max = ADF4382_PHASE_RESYNC_MOD2WORD_MAX;
@@ -717,7 +703,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 	uint8_t clkout_div;
 	uint8_t dclk_div1;
 	uint64_t pfd_freq;
-	uint8_t ldwin_pw;
+	uint8_t ldwin_pw = 0;
 	uint8_t int_mode;
 	uint8_t en_bleed;
 	uint16_t n_int;
@@ -930,6 +916,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 				      dev->ld_count);
 	if (ret)
 		return ret;
+
 	ret = adf4382_spi_update_bits(dev, 0x2C, ADF4382_LDWIN_PW_MSK,
 				      no_os_field_prep(ADF4382_LDWIN_PW_MSK,
 						      ldwin_pw));
@@ -1045,13 +1032,14 @@ int adf4382_set_phase_pol(struct adf4382_dev *dev, bool polarity)
  */
 int adf4382_get_phase_pol(struct adf4382_dev *dev, bool *polarity)
 {
-	int pol;
+	uint8_t tmp;
+	int ret;
 
-	pol = adf4382_spi_test_bits(dev, 0x32, ADF4382_PHASE_ADJ_POL_MSK);
-	if (pol < 0)
-		return pol;
+	ret = adf4382_spi_read(dev, 0x32, &tmp);
+	if (ret)
+		return ret;
 
-	*polarity = pol;
+	*polarity = no_os_field_get(tmp, ADF4382_PHASE_ADJ_POL_MSK);
 	return 0;
 }
 
