@@ -677,7 +677,7 @@ int adf4382_get_bleed_word(struct adf4382_dev *dev, int32_t *word);
 int adf4382_set_rfout(struct adf4382_dev *dev, uint64_t val);
 
 /** ADF4382 Get output frequency attribute */
-void adf4382_get_rfout(struct adf4382_dev *dev, uint64_t *val);
+int adf4382_get_rfout(struct adf4382_dev *dev, uint64_t *val);
 
 /** ADF4382 Set output power attributes */
 int adf4382_set_out_power(struct adf4382_dev *dev, uint8_t ch, int32_t pwr);

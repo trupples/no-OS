@@ -384,39 +384,6 @@ int adf4382_get_bleed_word(struct adf4382_dev *dev, int32_t *word)
 }
 
 /**
- * @brief Set the desired output frequency and reset everything over to maximum
- * supported value of 22GHz (21GHz for ADF4382A) to the max. value and
- * everything under the minimum supported value of 687.5MHz (2.875GHz for
- * ADF4382A) to the min. value.
- * @param dev 		- The device structure.
- * @param val	 	- The desired output frequency in Hz.
- * @return    		- 0 in case of success or negative error code.
- */
-int adf4382_set_rfout(struct adf4382_dev *dev, uint64_t val)
-{
-	dev->freq= val;
-
-	if(val > dev->freq_max)
-		dev->freq = dev->freq_max;
-
-	if(val < dev->freq_min)
-		dev->freq = dev->freq_min;
-
-	return adf4382_set_freq(dev);
-}
-
-/**
- * @brief Gets the user proposed output frequency
- * @param dev 		- The device structure.
- * @param val		- The set value of the output frequency in Hz.
- * @return    		- Nothing
- */
-void adf4382_get_rfout(struct adf4382_dev *dev, uint64_t *val)
-{
-	*val = dev->freq;
-}
-
-/**
  * @brief Set the output power register value of a channel and reset everything
  * over to maximum supported value of 15 to the max. value.
  * @param dev 		- The device structure.
@@ -554,6 +521,28 @@ int adf4382_get_en_sync(struct adf4382_dev *dev, bool *en)
 }
 
 /**
+ * @brief Set the desired output frequency and reset everything over to maximum
+ * supported value of 22GHz (21GHz for ADF4382A) to the max. value and
+ * everything under the minimum supported value of 687.5MHz (2.875GHz for
+ * ADF4382A) to the min. value.
+ * @param dev 		- The device structure.
+ * @param val	 	- The desired output frequency in Hz.
+ * @return    		- 0 in case of success or negative error code.
+ */
+int adf4382_set_rfout(struct adf4382_dev *dev, uint64_t val)
+{
+	dev->freq= val;
+
+	if(val > dev->freq_max)
+		dev->freq = dev->freq_max;
+
+	if(val < dev->freq_min)
+		dev->freq = dev->freq_min;
+
+	return adf4382_set_freq(dev);
+}
+
+/**
  * @brief Computes the PFD frequency and returns the value in KHz.
  * @param dev 	     - The device structure.
  * @return 	     - PFD value in Hz.
@@ -567,6 +556,103 @@ static uint64_t adf4382_pfd_compute(struct adf4382_dev *dev)
 		pfd_freq *=  2;
 
 	return pfd_freq;
+}
+
+/**
+ * @brief Gets the user proposed output frequency
+ * @param dev 		- The device structure.
+ * @param val		- The set value of the output frequency in Hz.
+ * @return    		- 0 in case of success or negative error code.
+ */
+int adf4382_get_rfout(struct adf4382_dev *dev, uint64_t *val)
+{
+	uint32_t frac1 = 0;
+	uint32_t frac2 = 0;
+	uint32_t mod2 = 0;
+	uint64_t freq;
+	uint64_t pfd;
+	uint8_t tmp;
+	uint16_t n;
+	int ret;
+
+	pfd = adf4382_pfd_compute(dev);
+
+	ret = adf4382_spi_read(dev, 0x11, &tmp);
+	if  (ret)
+		return ret;
+	n = tmp & ADF4382_N_INT_MSB_MSK;
+	n = n << 8;
+
+	ret = adf4382_spi_read(dev, 0x10, &tmp);
+	if  (ret)
+		return ret;
+	n |= tmp;
+
+	ret = adf4382_spi_read(dev, 0x15, &tmp);
+	if  (ret)
+		return ret;
+	frac1 = tmp & ADF4382_FRAC1WORD_MSB;
+	frac1 = frac1 << 8;
+
+	ret = adf4382_spi_read(dev, 0x14, &tmp);
+	if  (ret)
+		return ret;
+	frac1 |= tmp;
+	frac1 = frac1 << 8;
+
+	ret = adf4382_spi_read(dev, 0x13, &tmp);
+	if  (ret)
+		return ret;
+	frac1 |= tmp;
+	frac1 = frac1 << 8;
+
+	ret = adf4382_spi_read(dev, 0x12, &tmp);
+	if  (ret)
+		return ret;
+	frac1 |= tmp;
+
+	ret = adf4382_spi_read(dev, 0x19, &tmp);
+	if  (ret)
+		return ret;
+	frac2 = tmp;
+	frac2 = frac2 << 8;
+
+	ret = adf4382_spi_read(dev, 0x18, &tmp);
+	if  (ret)
+		return ret;
+	frac2 |= tmp;
+	frac2 = frac2 << 8;
+
+	ret = adf4382_spi_read(dev, 0x17, &tmp);
+	if  (ret)
+		return ret;
+	frac2 |= tmp;
+
+	ret = adf4382_spi_read(dev, 0x1c, &tmp);
+	if  (ret)
+		return ret;
+	mod2 = tmp;
+	mod2 = mod2 << 8;
+
+	ret = adf4382_spi_read(dev, 0x1b, &tmp);
+	if  (ret)
+		return ret;
+	mod2 |= tmp;
+	mod2 = mod2 << 8;
+
+	ret = adf4382_spi_read(dev, 0x1a, &tmp);
+	if  (ret)
+		return ret;
+	mod2 |= tmp;
+	
+	freq = frac2 * pfd;
+	freq = no_os_div_u64(freq, mod2);
+	freq = freq + (frac1 * pfd);
+	freq = no_os_div_u64(freq, ADF4382_MOD1WORD);
+	freq = freq + (n * pfd);
+
+	*val = freq;
+	return 0;
 }
 
 /**
