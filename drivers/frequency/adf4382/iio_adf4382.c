@@ -99,8 +99,15 @@ static int adf4382_iio_find_2d_row(const int (*tbl)[2], const int size,
 static int adf4382_iio_read_reg(struct adf4382_iio_dev *dev, uint32_t reg,
 				uint32_t *readval)
 {
-	return adf4382_spi_read(dev->adf4382_dev, (uint16_t)reg,
-				(uint8_t *)readval);
+	uint8_t tmp;
+	int ret;
+
+	ret = adf4382_spi_read(dev->adf4382_dev, (uint16_t)reg, &tmp);
+	if (ret)
+		return ret;
+
+	*readval = tmp;
+	return 0;
 }
 
 /**
