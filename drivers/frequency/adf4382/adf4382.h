@@ -39,6 +39,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "no_os_units.h"
 #include "no_os_util.h"
 #include "no_os_spi.h"
 
@@ -472,11 +473,9 @@
 #define ADF4382_VCO_CAL_ALC			250
 #define ADF4382_POR_DELAY_US			200
 
-#define KHZ					1000
-#define MHZ					KHZ * KHZ
-#define S_TO_NS					1000000000U
-#define NS_TO_PS				1000
-#define UA_TO_A					1000000
+#define MHZ					MEGA
+#define S_TO_NS					NANO
+#define NS_TO_PS				KHZ_PER_MHZ
 
 /**
  * @struct adf4382_init_param

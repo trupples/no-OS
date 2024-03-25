@@ -39,9 +39,9 @@
 
 #include "adf4382.h"
 #include "no_os_alloc.h"
+#include "no_os_delay.h"
 #include "no_os_error.h"
 #include "no_os_print_log.h"
-#include "no_os_delay.h"
 
 /* Charge pump current values expressed in uA */
 static const int adf4382_ci_ua[] = {
@@ -860,7 +860,7 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 		int_mode = 1;
 		en_bleed = 0;
 
-		tmp = NO_OS_DIV_ROUND_UP(pfd_freq, UA_TO_A);
+		tmp = NO_OS_DIV_ROUND_UP(pfd_freq, MICROAMPER_PER_AMPER);
 		tmp *= adf4382_ci_ua[dev->cp_i];
 		tmp = NO_OS_DIV_ROUND_UP(dev->bleed_word, tmp);
 		if (tmp <= 85)
@@ -1077,7 +1077,7 @@ int adf4382_set_phase_adjust(struct adf4382_dev *dev, uint32_t phase_ps)
 	phase_bleed = phase_deg * ADF4382_PHASE_BLEED_CNST;
 	//The charge pump current will also need to be taken in to account
 	phase_ci = phase_bleed * adf4382_ci_ua[dev->cp_i];
-	phase_ci = no_os_div_u64(phase_ci, UA_TO_A);
+	phase_ci = no_os_div_u64(phase_ci, MICROAMPER_PER_AMPER);
 
 	//Computation of the register value for the phase adjust
 	pfd_freq = adf4382_pfd_compute(dev);
