@@ -799,10 +799,11 @@ int adf4382_set_freq(struct adf4382_dev *dev)
 	uint8_t val;
 	int ret;
 
+	val = no_os_field_prep(ADF4382_EN_RDBLR_MSK, dev->ref_doubler_en) |
+	      no_os_field_prep(ADF4382_R_DIV_MSK, dev->ref_div);
 	ret = adf4382_spi_update_bits(dev, 0x20,
 				      ADF4382_EN_RDBLR_MSK | ADF4382_R_DIV_MSK,
-				      ADF4382_EN_RDBLR(dev->ref_doubler_en) |
-				      ADF4382_R_DIV(dev->ref_div));
+				      val);
 	if (ret)
 		return ret;
 
@@ -1213,7 +1214,8 @@ int adf4382_init(struct adf4382_dev **dev,
 	if (ret)
 		goto error_spi;
 
-	ret = adf4382_spi_write(device, 0x3D, ADF4382_CMOS_OV(device->cmos_3v3));
+	ret = adf4382_spi_write(device, 0x3D,
+				no_os_field_prep(ADF4382_CMOS_OV_MSK, device->cmos_3v3));
 	if (ret)
 		goto error_spi;
 

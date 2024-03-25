@@ -165,9 +165,7 @@
 /* ADF4382 REG0020 Map */
 #define ADF4382_EN_AUTOCAL_MSK			NO_OS_BIT(7)
 #define ADF4382_EN_RDBLR_MSK			NO_OS_BIT(6)
-#define ADF4382_EN_RDBLR(x)			no_os_field_prep(ADF4382_EN_RDBLR_MSK, x)
 #define ADF4382_R_DIV_MSK			NO_OS_GENMASK(5, 0)
-#define ADF4382_R_DIV(x)			no_os_field_prep(ADF4382_R_DIV_MSK, x)
 
 /* ADF4382 REG0021 Map */
 #define ADF4382_PHASE_WORD_LSB_MSK		NO_OS_GENMASK(7, 0)
@@ -318,7 +316,6 @@
 #define ADF4382_SPARE_3D_MSK			NO_OS_BIT(7)
 #define ADF4382_SYNC_SP_DB_MSK			NO_OS_BIT(6)
 #define ADF4382_CMOS_OV_MSK			NO_OS_BIT(5)
-#define ADF4382_CMOS_OV(x)			no_os_field_prep(ADF4382_CMOS_OV_MSK, x)
 #define ADF4382_READ_MODE_MSK			NO_OS_BIT(4)
 #define ADF4382_CNTR_DIV_WORD_MSB_MSK		NO_OS_GENMASK(3, 0)
 
@@ -714,4 +711,3 @@ int adf4382_init(struct adf4382_dev **device,
 
 /** ADF4382 Remove */
 int adf4382_remove(struct adf4382_dev *dev);
-
