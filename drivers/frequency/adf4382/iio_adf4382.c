@@ -139,11 +139,13 @@ static int adf4382_iio_read_freq(void *dev, char *buf, uint32_t len,
 				 intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	uint64_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -166,11 +168,13 @@ static int adf4382_iio_write_freq(void *dev, char *buf, uint32_t len,
 				  intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	uint64_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -194,11 +198,13 @@ static int adf4382_iio_read_rfreq(void *dev, char *buf, uint32_t len,
 				  intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	uint64_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -223,11 +229,13 @@ static int adf4382_iio_write_rfreq(void *dev, char *buf, uint32_t len,
 				   intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	uint64_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -251,13 +259,15 @@ static int adf4382_iio_read_cpi(void *dev, char *buf, uint32_t len,
 				intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val[2];
 	int32_t cp_i;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -287,12 +297,14 @@ static int adf4382_iio_write_cpi(void *dev, char *buf, uint32_t len,
 				 intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val[2];
 	uint8_t index;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -322,13 +334,15 @@ static int adf4382_iio_cpi_available(void *dev, char *buf, uint32_t len,
 				     intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	char buffer[5];
 	int32_t val[2];
 	uint8_t i;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -361,12 +375,14 @@ static int adf4382_iio_read_bi(void *dev, char *buf, uint32_t len,
 			       intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -394,11 +410,13 @@ static int adf4382_iio_write_bi(void *dev, char *buf, uint32_t len,
 				intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -422,13 +440,15 @@ static int adf4382_iio_read_doubler(void *dev, char *buf, uint32_t len,
 				    intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 	bool en;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -439,7 +459,6 @@ static int adf4382_iio_read_doubler(void *dev, char *buf, uint32_t len,
 
 	val = en;
 	return iio_format_value(buf, len, IIO_VAL_INT, 1, &val);
-
 }
 
 /**
@@ -458,11 +477,13 @@ static int adf4382_iio_write_doubler(void *dev, char *buf, uint32_t len,
 				     intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -486,12 +507,14 @@ static int adf4382_iio_read_divider(void *dev, char *buf, uint32_t len,
 				    intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -519,11 +542,13 @@ static int adf4382_iio_write_divider(void *dev, char *buf, uint32_t len,
 				     intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -547,12 +572,14 @@ static int adf4382_iio_read_opwr(void *dev, char *buf, uint32_t len,
 				 intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val = -EINVAL;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -580,11 +607,13 @@ static int adf4382_iio_write_opwr(void *dev, char *buf, uint32_t len,
 				  intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -608,13 +637,15 @@ static int adf4382_iio_read_en(void *dev, char *buf, uint32_t len,
 			       intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val = -EINVAL;
 	bool en;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -643,11 +674,13 @@ static int adf4382_iio_write_en(void *dev, char *buf, uint32_t len,
 				intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -671,13 +704,15 @@ static int adf4382_iio_read_sync_en(void *dev, char *buf, uint32_t len,
 				    intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val = -EINVAL;
 	bool en;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -706,11 +741,13 @@ static int adf4382_iio_write_sync_en(void *dev, char *buf, uint32_t len,
 				     intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -734,13 +771,15 @@ static int adf4382_iio_read_phase_adj(void *dev, char *buf, uint32_t len,
 				      intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val = -EINVAL;
 	bool pol;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
@@ -770,12 +809,14 @@ static int adf4382_iio_write_phase_adj(void *dev, char *buf, uint32_t len,
 				       intptr_t priv)
 {
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
-	struct adf4382_dev *adf4382 = iio_adf4382->adf4382_dev;
+	struct adf4382_dev *adf4382;
 	int32_t val;
 	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
+
+	adf4382 = iio_adf4382->adf4382_dev;
 
 	if (!adf4382)
 		return -EINVAL;
