@@ -75,6 +75,9 @@ int adf4382_spi_write(struct adf4382_dev *dev, uint16_t reg_addr, uint8_t data)
 	uint8_t buff[ADF4382_BUFF_SIZE_BYTES];
 	uint16_t cmd;
 
+	if (!dev)
+		return -EINVAL;
+
 	cmd = ADF4382_SPI_WRITE_CMD | reg_addr;
 	if (dev->spi_desc->bit_order) {
 		buff[0] = no_os_bit_swap_constant_8(cmd & 0xFF);
@@ -102,6 +105,9 @@ int adf4382_spi_read(struct adf4382_dev *dev, uint16_t reg_addr, uint8_t *data)
 	int ret;
 	uint8_t buff[ADF4382_BUFF_SIZE_BYTES];
 	uint16_t cmd;
+
+	if (!dev)
+		return -EINVAL;
 
 	cmd = ADF4382_SPI_READ_CMD | reg_addr;
 	if (dev->spi_desc->bit_order) {
@@ -199,6 +205,9 @@ int adf4382_reg_dump(struct adf4382_dev *dev)
  */
 int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val)
 {
+	if (!dev)
+		return -EINVAL;
+
 	dev->ref_freq_hz = val;
 
 	if(val > ADF4382_REF_CLK_MAX)
@@ -218,6 +227,9 @@ int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val)
  */
 void adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val)
 {
+	if (!dev)
+		return -EINVAL;
+
 	*val = dev->ref_freq_hz;
 }
 
@@ -231,6 +243,9 @@ void adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val)
  */
 int adf4382_set_en_ref_doubler(struct adf4382_dev *dev, bool en)
 {
+	if (!dev)
+		return -EINVAL;
+
 	dev->ref_doubler_en = en;
 
 	return adf4382_set_freq(dev);
@@ -267,6 +282,9 @@ int adf4382_get_en_ref_doubler(struct adf4382_dev *dev, bool *en)
  */
 int adf4382_set_ref_div(struct adf4382_dev *dev, int32_t div)
 {
+	if (!dev)
+		return -EINVAL;
+
 	dev->ref_div = div;
 
 	if(div > ADF4382_REF_DIV_MAX)
@@ -306,6 +324,9 @@ int adf4382_get_ref_div(struct adf4382_dev *dev, int32_t *div)
  */
 int adf4382_set_cp_i(struct adf4382_dev *dev, int32_t reg_val)
 {
+	if (!dev)
+		return -EINVAL;
+
 	dev->cp_i = (uint8_t)reg_val;
 
 	if(reg_val > ADF4382_CPI_VAL_MAX)
@@ -346,6 +367,8 @@ int adf4382_get_cp_i(struct adf4382_dev *dev, int32_t *reg_val)
  */
 int adf4382_set_bleed_word(struct adf4382_dev *dev, int32_t word)
 {
+	if (!dev)
+		return -EINVAL;
 
 	dev->bleed_word = (uint16_t)word;
 
@@ -531,6 +554,9 @@ int adf4382_get_en_sync(struct adf4382_dev *dev, bool *en)
  */
 int adf4382_set_rfout(struct adf4382_dev *dev, uint64_t val)
 {
+	if (!dev)
+		return -EINVAL;
+
 	dev->freq= val;
 
 	if(val > dev->freq_max)
