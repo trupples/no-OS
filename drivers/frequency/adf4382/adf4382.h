@@ -643,7 +643,7 @@ int adf4382_reg_dump(struct adf4382_dev *dev);
 int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val);
 
 /** ADF4382 Get reference frequency attribute */
-void adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val);
+int adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val);
 
 /** ADF4382 Set reference doubler attribute */
 int adf4382_set_en_ref_doubler(struct adf4382_dev *dev, bool en);

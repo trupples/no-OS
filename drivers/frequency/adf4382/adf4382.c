@@ -225,12 +225,14 @@ int adf4382_set_ref_clk(struct adf4382_dev *dev, uint64_t val)
  * @param val		- The set value of the reference frequency in Hz.
  * @return    		- Reference frequency in KHz.
  */
-void adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val)
+int adf4382_get_ref_clk(struct adf4382_dev *dev, uint64_t *val)
 {
 	if (!dev)
 		return -EINVAL;
 
 	*val = dev->ref_freq_hz;
+
+	return 0;
 }
 
 /**

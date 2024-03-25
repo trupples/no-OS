@@ -200,6 +200,7 @@ static int adf4382_iio_read_rfreq(void *dev, char *buf, uint32_t len,
 	struct adf4382_iio_dev *iio_adf4382 = (struct adf4382_iio_dev *)dev;
 	struct adf4382_dev *adf4382;
 	uint64_t val;
+	int ret;
 
 	if (!iio_adf4382)
 		return -EINVAL;
@@ -208,9 +209,11 @@ static int adf4382_iio_read_rfreq(void *dev, char *buf, uint32_t len,
 
 	if (!adf4382)
 		return -EINVAL;
-	adf4382_get_ref_clk(adf4382, &val);
+	ret = adf4382_get_ref_clk(adf4382, &val);
+	if (ret)
+		return ret;
+
 	return snprintf(buf, len, "%"PRIu64, val);
-//	return 0;
 }
 
 /**
