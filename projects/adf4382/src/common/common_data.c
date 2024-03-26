@@ -72,5 +72,5 @@ struct adf4382_init_param adf4382_ip = {
 	.cp_i = 15,
 	.bleed_word = 4903,
 	.ld_count = 10,
-	.adf4382a = true,
+	.id = ID_ADF4382A,
 };

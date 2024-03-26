@@ -475,6 +475,14 @@
 #define NS_TO_PS				KHZ_PER_MHZ
 
 /**
+ * @brief Supported device ids.
+*/
+enum adf4382_dev_id {
+	ID_ADF4382,
+	ID_ADF4382A,
+};
+
+/**
  * @struct adf4382_init_param
  * @brief ADF4382 Initialization Parameters structure.
  */
@@ -490,7 +498,7 @@ struct adf4382_init_param {
 	uint8_t				cp_i;
 	uint16_t			bleed_word;
 	uint8_t				ld_count;
-	bool				adf4382a;
+	enum adf4382_dev_id		id;
 };
 
 /**

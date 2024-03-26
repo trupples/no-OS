@@ -1215,17 +1215,23 @@ int adf4382_init(struct adf4382_dev **dev,
 	device->ld_count = init_param->ld_count;
 	device->phase_adj = 0;
 
-	device->freq_max = ADF4382_RFOUT_MAX;
-	device->freq_min = ADF4382_RFOUT_MIN;
-	device->vco_max = ADF4382_VCO_FREQ_MAX;
-	device->vco_min = ADF4382_VCO_FREQ_MIN;
-	device->clkout_div_reg_val_max = ADF4382_CLKOUT_DIV_REG_VAL_MAX;
-	if (init_param->adf4382a) {
+	switch(init_param->id) {
+	case ID_ADF4382:
+		device->freq_max = ADF4382_RFOUT_MAX;
+		device->freq_min = ADF4382_RFOUT_MIN;
+		device->vco_max = ADF4382_VCO_FREQ_MAX;
+		device->vco_min = ADF4382_VCO_FREQ_MIN;
+		device->clkout_div_reg_val_max = ADF4382_CLKOUT_DIV_REG_VAL_MAX;
+		break;
+	case ID_ADF4382A:
 		device->freq_max = ADF4382A_RFOUT_MAX;
 		device->freq_min = ADF4382A_RFOUT_MIN;
 		device->vco_max = ADF4382A_VCO_FREQ_MAX;
 		device->vco_min = ADF4382A_VCO_FREQ_MIN;
 		device->clkout_div_reg_val_max = ADF4382A_CLKOUT_DIV_REG_VAL_MAX;
+		break;
+	default:
+		return -EINVAL;
 	}
 
 	ret = adf4382_spi_write(device, 0x00, ADF4382_RESET_CMD);
