@@ -69,6 +69,8 @@ int main()
 
 	no_os_uart_stdio(uart_desc);
 	ret = basic_example_main();
+	if (ret)
+		no_os_uart_remove(uart_desc);
 #endif
 
 #ifdef IIO_EXAMPLE
