@@ -61,14 +61,14 @@ int basic_example_main()
 
 	ret = adf4382_set_rfout(dev, 3100000000);
 	if (ret)
-		goto error;
+		goto remove_adf4382;
 
 	ret = adf4382_set_phase_adjust(dev, 1);
-	if (ret)
-		goto error;
 
-	return ret;
+remove_adf4382:
+	adf4382_remove(dev);
 error:
-	pr_info("Error!\n");
+	if (ret)
+		pr_info("Error!\n");
 	return ret;
 }

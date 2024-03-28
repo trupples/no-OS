@@ -37,10 +37,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
+#include "common_data.h"
 #include "iio_example.h"
 #include "iio_adf4382.h"
-#include "common_data.h"
 #include "iio_app.h"
+#include "no_os_print_log.h"
 
 /**
  * @brief IIO example main execution.
@@ -75,7 +76,16 @@ int iio_example_main()
 
 	ret = iio_app_init(&app, app_init_param);
 	if (ret)
-		return ret;
+		goto exit;
 
-	return iio_app_run(app);
+	ret = iio_app_run(app);
+
+	iio_app_remove(app);
+exit:
+	adf4382_iio_remove(adf4382_iio_dev);
+
+	if (ret)
+		pr_info("Error!\n");
+
+	return ret;
 }
