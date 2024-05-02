@@ -562,7 +562,7 @@ struct ad9545_out_clk {
 	bool				source_current;
 	enum ad9545_output_mode		output_mode;
 	uint32_t			source_ua;
-	struct clk_hw			hw;
+	struct no_os_clk_desc			hw;
 	unsigned int			address;
 	unsigned long			rate_requested_hz;
 };
@@ -576,7 +576,7 @@ struct ad9545_dpll_profile {
 	unsigned int			fast_acq_timeout_ms;
 	unsigned int			fast_acq_settle_ms;
 	bool				en;
-	u8				tdc_source;
+	uint8_t			tdc_source;
 	bool				fb_tagging;
 };
 
@@ -584,9 +584,9 @@ struct ad9545_pll_clk {
 	struct ad9545_dev		*dev;
 	bool				pll_used;
 	unsigned int			address;
-	struct clk_hw			hw;
+	struct no_os_clk_desc			hw;
 	unsigned int			num_parents;
-	const struct clk_hw		**parents;
+	const struct no_os_clk_desc		**parents;
 	struct ad9545_dpll_profile	profiles[AD9545_MAX_DPLL_PROFILES];
 	unsigned int			free_run_freq;
 	unsigned int			fast_acq_trigger_mode;
@@ -600,11 +600,11 @@ struct ad9545_pll_clk {
 struct ad9545_ref_in_clk {
 	struct no_os_clk_desc		*hw;
 	struct ad9545_dev		*dev;
-	u32				r_div_ratio;
+	uint32_t		r_div_ratio;
 	bool				ref_used;
-	u32				d_tol_ppb;
-	u8				monitor_hyst_scale;
-	u32				valid_t_ms;
+	uint32_t				d_tol_ppb;
+	uint8_t				monitor_hyst_scale;
+	uint32_t				valid_t_ms;
 	struct no_os_clk_desc		*parent_clk;
 	unsigned int			address;
 	enum ad9545_ref_mode		mode;
@@ -621,7 +621,7 @@ struct ad9545_ref_in_clk {
 };
 
 struct ad9545_aux_nco_clk {
-	struct clk_hw			hw;
+	struct no_os_clk_desc			hw;
 	bool				nco_used;
 	struct ad9545_dev		*dev;
 	unsigned int			address;
@@ -630,7 +630,7 @@ struct ad9545_aux_nco_clk {
 };
 
 struct ad9545_aux_tdc_clk {
-	struct clk_hw			hw;
+	struct no_os_clk_desc		hw;
 	bool				tdc_used;
 	struct ad9545_dev		*dev;
 	unsigned int			address;
@@ -638,7 +638,7 @@ struct ad9545_aux_tdc_clk {
 };
 
 struct ad9545_aux_dpll_clk {
-	struct clk_hw			hw;
+	struct no_os_clk_desc		hw;
 	bool				dpll_used;
 	struct ad9545_dev		*dev;
 	unsigned int			source;
@@ -649,8 +649,8 @@ struct ad9545_aux_dpll_clk {
 struct ad9545_sys_clk {
 	bool				sys_clk_freq_doubler;
 	bool				sys_clk_crystal;
-	u32				ref_freq_hz;
-	u32				sys_freq_hz;
+	uint32_t			ref_freq_hz;
+	uint32_t			sys_freq_hz;
 };
 
 struct ad9545_dev;
