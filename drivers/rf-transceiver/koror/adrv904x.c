@@ -766,18 +766,6 @@ static int adrv904x_jesd204_link_enable(struct jesd204_dev *jdev,
 			return JESD204_STATE_CHANGE_ERROR;
 		}
 
-		uint8_t syncbStatus = 0;
-		uint8_t err_cnt = 0;
-		uint8_t framerLinkState = 0;
-
-		ret = adi_adrv904x_FramerSyncbStatusGet(phy->kororDevice, ADI_ADRV904X_FRAMER_0, &syncbStatus);
-		ret = adi_adrv904x_FramerSyncbErrCntGet(phy->kororDevice,ADI_ADRV904X_FRAMER_0, &err_cnt);
-		ret = adi_adrv904x_FramerLinkStateGet(phy->kororDevice, &framerLinkState);
-
-		printf("sync status %X\n", syncbStatus);
-		printf("err counter %X\n", err_cnt);
-		printf("framer link state %X\n", framerLinkState);
-
 		if (framerStatus.status != 0x82)
  			pr_warning("Link%u framerStatus 0x%X\n",
  				   lnk->link_id, framerStatus.status);
@@ -790,10 +778,6 @@ static int adrv904x_jesd204_link_enable(struct jesd204_dev *jdev,
 			return JESD204_STATE_CHANGE_ERROR;
 		}
 
-		adi_adrv904x_Dfrm204cErrCounterStatus_t errCounterStatus = {0};
-
-
-
  		ret  = adi_adrv904x_DfrmLinkConditionGet(
  			       phy->kororDevice,
  			       priv->link[lnk->link_id].source_id,
@@ -802,17 +786,9 @@ static int adrv904x_jesd204_link_enable(struct jesd204_dev *jdev,
  		pr_info("Link%u deframerStatus linkState 0x%X\n",
  				lnk->link_id, deframerStatus.linkState);
 
- 		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < lnk->num_lanes; i++)
  			pr_warning("Link%u deframerStatus %d laneStatus 0x%X\n",
   				   lnk->link_id, i,  deframerStatus.laneStatus[i]);
-
- 			ret = adi_adrv904x_Dfrm204cErrCounterStatusGet(phy->kororDevice, ADI_ADRV904X_DEFRAMER_0, i, &errCounterStatus);
-
- 			pr_warning("Lane %d status 0x%X 0x%X 0x%X 0x%X\n",
- 			  				   i,  errCounterStatus.crcCntValue, errCounterStatus.embCntValue, errCounterStatus.mbCntValue,
-							   errCounterStatus.shCntValue);
-
- 		}
  	}
 
  	return JESD204_STATE_CHANGE_DONE;
@@ -891,21 +867,9 @@ static int adrv904x_jesd204_post_running_stage(struct jesd204_dev *jdev,
  		return JESD204_STATE_CHANGE_DONE;
  	}
 
-// 	/* Initialize Tx Ramp down functionality */
-// 	ret = 	(phy->madDevice, &phy->deviceInitStruct);
-// 	if (ret)
-// 		return adrv9025_dev_err(phy);
-//
-// 	/* Setup GP Interrupts from init structure */
-// 	ret = adi_adrv904x_GpIntInit(phy->madDevice,
-// 				     &phy->deviceInitStruct.gpInterrupts);
-// 	if (ret)
-// 		return adrv9025_dev_err(phy);
-
-// 	no_os_clk_set_rate(phy->clks[ADRV904X_RX_SAMPL_CLK], phy->rx_iqRate_kHz * 1000);
-// 	no_os_clk_set_rate(phy->clks[ADRV904X_TX_SAMPL_CLK], phy->tx_iqRate_kHz * 1000);
-
- 	ret = adi_adrv904x_RxTxEnableSet(phy->kororDevice, 0x00, 0x00, ADI_ADRV904X_RX_MASK_ALL, ADI_ADRV904X_RX_MASK_ALL, ADI_ADRV904X_TX0 | ADI_ADRV904X_TX7, ADI_ADRV904X_TX0 | ADI_ADRV904X_TX7);
+	ret = adi_adrv904x_RxTxEnableSet(phy->kororDevice, 0x00, 0x00,
+			ADI_ADRV904X_RX_MASK_ALL, ADI_ADRV904X_RX_MASK_ALL,
+			ADI_ADRV904X_TXALL, ADI_ADRV904X_TXALL);
 	if (ret) {
 		pr_err("ERROR adi_adrv904x_RxTxEnableSet failed in %s at line %d.\n",
 			   __func__, __LINE__);
@@ -924,8 +888,6 @@ static int adrv904x_jesd204_post_running_stage(struct jesd204_dev *jdev,
 	}
 
 	memset(&initCalStatus, 0, sizeof(adi_adrv904x_InitCalStatus_t));
-
-	ADI_APP_MESSAGE("\nPhase10EnableTrackingCals()\n");
 
 	ret = adi_adrv904x_InitCalsDetailedStatusGet(phy->kororDevice, &initCalStatus);
 	if (ret) {
