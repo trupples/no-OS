@@ -5,6 +5,9 @@
 	  },
 	  "swiot1l_static_ip": {
 	    "flags" : "RELEASE=y SWIOT1L_STATIC_IP=y"
+	  },
+	  "swiot1l_static_ip_mqtt": {
+		"flags" : "RELEASE=y SWIOT1L_STATIC_IP=y SWIOT1L_MQTT_EXAMPLE=y"
 	  }
 	}
 }

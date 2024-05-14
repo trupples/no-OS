@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   parameters.h
- *   @brief Definitions specific to Maxim platform used by the swiot1l project
+ *   @file   swiot1l_mqtt.h
+ *   @brief  Defines the main function for the mqtt example.
  *   @author Ciprian Regus (ciprian.regus@analog.com)
 ********************************************************************************
- * Copyright 2023(c) Analog Devices, Inc.
+ * Copyright 2024(c) Analog Devices, Inc.
  *
  * All rights reserved.
  *
@@ -36,46 +36,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef __PARAMETERS_H__
-#define __PARAMETERS_H__
 
-#include "maxim_irq.h"
-#include "maxim_spi.h"
-#include "maxim_gpio.h"
-#include "maxim_i2c.h"
-#include "maxim_timer.h"
-#include "maxim_uart.h"
-#include "maxim_uart_stdio.h"
+#ifndef __SWIOT1L_MQTT_H__
+#define __SWIOT1L_MQTT_H__
 
-#ifdef IIO_SUPPORT
-#define INTC_DEVICE_ID  0
-#endif
-#define UART_IRQ_ID     UART0_IRQn
+int swiot1l_mqtt();
 
-#define UART_DEVICE_ID  0
-#define UART_BAUDRATE   115200
-#define UART_OPS        &max_uart_ops
-#define UART_EXTRA      &adin1110_uart_extra_ip
-
-#define SPI_DEVICE_ID   2
-#define SPI_BAUDRATE    15000000
-#define SPI_CS          0
-#define SPI_OPS         &max_spi_ops
-#define SPI_EXTRA       &adin1110_spi_extra_ip
-
-#define I2C_EXTRA	&vddioh_i2c_extra
-#define GPIO_EXTRA	&vddioh_gpio_extra
-
-extern struct max_uart_init_param adin1110_uart_extra_ip;
-extern struct max_spi_init_param adin1110_spi_extra_ip;
-extern struct max_i2c_init_param vddioh_i2c_extra;
-extern struct max_gpio_init_param vddioh_gpio_extra;
-
-#define AD74413R_GPIO_TRIG_IRQ_ID     22
-#define AD74413R_GPIO_CB_HANDLE       NULL
-
-#define GPIO_IRQ_ID             1 /* Pin 0 */
-#define GPIO_IRQ_OPS            &max_gpio_irq_ops
-#define GPIO_IRQ_EXTRA          NULL
-
-#endif /* __PARAMETERS_H__ */
+#endif // __SWIOT1L_MQTT_H__
